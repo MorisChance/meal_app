@@ -21,6 +21,10 @@ class Meal extends Model
     {
         return $this->belongsTo(Category::class);
     }
+        public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
     public function getImageUrlAttribute()
     {
         return Storage::url($this->image_path);
