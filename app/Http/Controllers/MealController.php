@@ -42,6 +42,8 @@ class MealController extends Controller
     {
         $meal = new Meal($request->all());
         $meal->user_id = $request->user()->id;
+        $meal->category_id = $request->category;
+
         $file = $request->file('image');
         $meal->image = self::createFileName($file);
 
@@ -66,7 +68,7 @@ class MealController extends Controller
         }
 
         return redirect()
-            ->route('meals.show', $meal)
+            ->route('meals.index', $meal)
             ->with('notice', '記事を登録しました');
     }
 
@@ -91,7 +93,8 @@ class MealController extends Controller
     public function edit($id)
     {
         $meal = Meal::find($id);
-        return view('meals.edit', compact('meal'));
+        $categories = Category::all();
+        return view('meals.edit', compact('meal', 'categories'));
     }
 
     /**
@@ -105,7 +108,7 @@ class MealController extends Controller
     {
         $meal = meal::find($id);
         if ($request->user()->cannot('update', $meal)) {
-            return redirect()->route('posts.show', $meal)
+            return redirect()->route('meals.show', $meal)
                 ->withErrors('自分の記事以外は更新できません');
         }
         $file = $request->file('image');
@@ -121,7 +124,7 @@ class MealController extends Controller
             $meal->save();
             if ($file) {
                 // 画像アップロード
-                if (!Storage::putFileAs('images/posts', $file, $meal->image)) {
+                if (!Storage::putFileAs('images/meals', $file, $meal->image)) {
                     // 例外を投げてロールバックさせる
                     throw new \Exception('画像ファイルの保存に失敗しました。');
                 }
