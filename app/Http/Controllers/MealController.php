@@ -44,7 +44,6 @@ class MealController extends Controller
     {
         $meal = new Meal($request->all());
         $meal->user_id = $request->user()->id;
-        $meal->category_id = $request->category;
 
         $file = $request->file('image');
         $meal->image = self::createFileName($file);
@@ -83,12 +82,7 @@ class MealController extends Controller
     public function show($id)
     {
         $meal = Meal::find($id);
-        // if (Auth::check()) {
-        //     $favorite = Favorite::where('user_id', Auth::id())->where('meal_id', $meal->id)->first();
-        //     // dd($favorite);
-        //     $favorite_count = Favorite::where('meal_id', $meal->id)->count();
-        //     return view('meals.show', compact('meal', 'favorite', 'favorite_count'));
-            if (Auth::user()) {
+        if (Auth::user()) {
             $favorite = Favorite::where('meal_id', $meal->id)->where('user_id', auth()->user()->id)->first();
             return view('meals.show', compact('meal', 'favorite'));
         } else {

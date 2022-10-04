@@ -35,16 +35,7 @@ class FavoriteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Meal $meal)
-    // {
-    //     $favorite = new Favorite();
-    //     $favorite->user_id = Auth::user()->id;
-    //     $favorite->meal_id = $meal;
-    //     // $favorite->save();
-    //     return redirect()
-    //         ->route('meals.show', $meal);
-    // }
-        public function store(Request $request, $id)
+    public function store(Request $request, $id)
     {
         $favorite = new Favorite;
         $meal = Meal::find($id);
@@ -99,7 +90,7 @@ class FavoriteController extends Controller
     //     $favorite->delete();
     //     return redirect()->route('meals.show', $meal);
     // }
-        public function destroy(Request $request, $id)
+    public function destroy(Request $request, $id)
     {
         $favorite = new Favorite;
         $meal = Meal::find($id);
