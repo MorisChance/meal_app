@@ -12,6 +12,8 @@ class Meal extends Model
     protected $fillable = [
         'title',
         'body',
+        'image',
+        'category_id'
     ];
     public function user()
     {
