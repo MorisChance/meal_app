@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MealController;
 /*
@@ -27,4 +28,18 @@ Route::resource('meals', MealController::class)
 Route::resource('meals', MealController::class)
     ->only(['show', 'index']);
 
-require __DIR__.'/auth.php';
+Route::resource('meals.favorites', FavoriteController::class)
+    ->only(['store', 'destroy'])
+    ->middleware('auth');
+require __DIR__ . '/auth.php';
+
+// +  Route::resource('meals', MealController::class)
+// +      ->only(['create', 'store', 'edit', 'update', 'destroy'])
+// +      ->middleware('auth');
+
+// +  Route::resource('meals', MealController::class)
+// +      ->only(['show', 'index']);
+
+// +  Route::resource('meals.favorites', FavoriteController::class)
+// +      ->only(['store', 'destroy'])
+// +      ->middleware('auth');

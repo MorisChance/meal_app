@@ -14,6 +14,10 @@
                         </p>
                         <img class="w-full mb-2" src="{{ $meal->image_url }}" alt="">
                         <p class="text-gray-700 text-base">{{ Str::limit($meal->body, 50) }}</p>
+                        <p class="text-sm mb-2 md:text-base font-normal text-gray-600">
+                        <?php $favorite_count = \App\Models\Favorite::where('meal_id', $meal->id)->count(); ?>
+                        <div>お気に入り数：{{ $favorite_count }}</div>
+                        </p>
                     </a>
                 </article>
             @endforeach

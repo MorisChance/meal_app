@@ -21,7 +21,7 @@
             @foreach ($categories as $category)
                 <label><input type="radio" name="category" id='category' value="{{ $category->id }}"
                         {{ old('category') == $category->id ? 'checked' : '' }}>
-                    {{ $category->category }}
+                    {{ $category->category}}
                     <br>
                 </label>
             @endforeach

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MealRequest;
 use App\Models\Category;
+use App\Models\Favorite;
 use App\Models\Meal;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,7 +19,7 @@ class MealController extends Controller
      */
     public function index()
     {
-        $meals = Meal::with('user')->latest()->paginate(3);
+        $meals = Meal::with('user')->latest()->paginate(4);
         return view('meals.index', compact('meals'));
     }
 
@@ -68,7 +70,7 @@ class MealController extends Controller
         }
 
         return redirect()
-            ->route('meals.index', $meal)
+            ->route('meals.show', $meal)
             ->with('notice', '記事を登録しました');
     }
 
@@ -81,7 +83,17 @@ class MealController extends Controller
     public function show($id)
     {
         $meal = Meal::find($id);
-        return view('meals.show', compact('meal'));
+        // if (Auth::check()) {
+        //     $favorite = Favorite::where('user_id', Auth::id())->where('meal_id', $meal->id)->first();
+        //     // dd($favorite);
+        //     $favorite_count = Favorite::where('meal_id', $meal->id)->count();
+        //     return view('meals.show', compact('meal', 'favorite', 'favorite_count'));
+            if (Auth::user()) {
+            $favorite = Favorite::where('meal_id', $meal->id)->where('user_id', auth()->user()->id)->first();
+            return view('meals.show', compact('meal', 'favorite'));
+        } else {
+            return view('meals.show', compact('meal'));
+        }
     }
 
     /**
@@ -106,7 +118,7 @@ class MealController extends Controller
      */
     public function update(MealRequest $request, $id)
     {
-        $meal = meal::find($id);
+        $meal = Meal::find($id);
         if ($request->user()->cannot('update', $meal)) {
             return redirect()->route('meals.show', $meal)
                 ->withErrors('自分の記事以外は更新できません');
@@ -117,6 +129,8 @@ class MealController extends Controller
             $meal->image = self::createFileName($file);
         }
         $meal->fill($request->all());
+        $meal->category_id = $request->category;
+
         // トランザクション開始
         DB::beginTransaction();
         try {
