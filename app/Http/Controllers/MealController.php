@@ -116,7 +116,7 @@ class MealController extends Controller
         if ($request->user()->cannot('update', $meal)) {
             return redirect()->route('meals.show', $meal)
                 ->withErrors('自分の記事以外は更新できません');
-
+        }
         $file = $request->file('image');
         if ($file) {
             $delete_file_path = $meal->image_path;
@@ -143,7 +143,7 @@ class MealController extends Controller
             ->route('meals.show', $meal)
             ->with('notice', '記事を更新しました');
     }
-    }
+    
     /**
      * Remove the specified resource from storage.
      *
