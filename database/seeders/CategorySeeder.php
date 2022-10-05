@@ -14,26 +14,15 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        // 一件だけinsertする
-        DB::table('categories')->insert([
-            'category' => '野菜',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ]);
-        # paramに配列を代入
-        $param = [
-            [
-                'category' => 'タンパク質',
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'category' => "炭水化物",
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
-            ]
-        ];
-        # DB::table->insertでレコードの登録
+        $param = [[
+            'name' => '野菜',
+        ],
+        [
+            'name' => 'タンパク質',
+        ],
+        [
+            'name' => '炭水化物',
+        ]];
         DB::table('categories')->insert($param);
     }
 }

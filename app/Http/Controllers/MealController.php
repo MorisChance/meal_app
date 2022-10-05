@@ -44,7 +44,7 @@ class MealController extends Controller
     {
         $meal = new Meal($request->all());
         $meal->user_id = $request->user()->id;
-
+        
         $file = $request->file('image');
         $meal->image = self::createFileName($file);
 
@@ -110,51 +110,40 @@ class MealController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(MealRequest $request, $id)
-    {
+    public function update(MealRequest $request, $id){
         $meal = Meal::find($id);
+        $meal->fill($request->all());
         if ($request->user()->cannot('update', $meal)) {
             return redirect()->route('meals.show', $meal)
                 ->withErrors('自分の記事以外は更新できません');
-        }
+
         $file = $request->file('image');
         if ($file) {
             $delete_file_path = $meal->image_path;
             $meal->image = self::createFileName($file);
         }
         $meal->fill($request->all());
-        $meal->category_id = $request->category;
-
-        // トランザクション開始
         DB::beginTransaction();
         try {
-            // 更新
             $meal->save();
             if ($file) {
-                // 画像アップロード
                 if (!Storage::putFileAs('images/meals', $file, $meal->image)) {
-                    // 例外を投げてロールバックさせる
                     throw new \Exception('画像ファイルの保存に失敗しました。');
                 }
-                // 画像削除
                 if (!Storage::delete($delete_file_path)) {
-                    //アップロードした画像を削除する
-                    Storage::delete($meal->image_path);
-                    //例外を投げてロールバックさせる
                     throw new \Exception('画像ファイルの削除に失敗しました。');
                 }
             }
-            // トランザクション終了(成功)
             DB::commit();
         } catch (\Exception $e) {
-            // トランザクション終了(失敗)
             DB::rollback();
             return back()->withInput()->withErrors($e->getMessage());
         }
-        return redirect()->route('meals.show', $meal)
+        return redirect()
+            ->route('meals.show', $meal)
             ->with('notice', '記事を更新しました');
     }
-
+    }
     /**
      * Remove the specified resource from storage.
      *

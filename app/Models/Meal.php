@@ -13,7 +13,7 @@ class Meal extends Model
         'title',
         'body',
         'image',
-        'category_id'
+        'category_id',
     ];
     public function user()
     {

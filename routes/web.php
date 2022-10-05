@@ -21,6 +21,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+require __DIR__ . '/auth.php';
+
 Route::resource('meals', MealController::class)
     ->only(['create', 'store', 'edit', 'update', 'destroy'])
     ->middleware('auth');
@@ -31,4 +33,3 @@ Route::resource('meals', MealController::class)
 Route::resource('meals.favorites', FavoriteController::class)
     ->only(['store', 'destroy'])
     ->middleware('auth');
-require __DIR__ . '/auth.php';

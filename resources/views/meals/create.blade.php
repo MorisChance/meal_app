@@ -18,13 +18,12 @@
             <label class="block text-gray-700 text-sm mb-2" for="title">
                 カテゴリー
             </label>
-            @foreach ($categories as $category)
-                <label><input type="radio" name="category" id='category' value="{{ $category->id }}"
-                        {{ old('category') == $category->id ? 'checked' : '' }}>
-                    {{ $category->category}}
-                    <br>
-                </label>
-            @endforeach
+                @foreach ($categories as $category)
+                    <div>
+                        <input type="radio" name="category_id" id="category{{ $category->id }}" value="{{ $category->id  }}" {{ old(('category_id')) == $category->id  ? 'checked': '' }}>
+                        <label for="category{{ $category->id }}">{{ $category->category }}</label>
+                    </div>
+                @endforeach
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm mb-2" for="body">
                     詳細
